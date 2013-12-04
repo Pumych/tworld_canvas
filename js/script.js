@@ -12,10 +12,13 @@
  * 7. Underwater layer - submarines
  */
 
-GameDraw.initImages();
-GameDraw.images.grass.onload = function(){
-    GameDraw.init();
-}
+GameDraw.init();
+
+//GameDraw.initImages();
+//GameDraw.images.grass.onload = function(){
+
+
+//}
 //
 //var map = {
 //    cellWidth: 20,
