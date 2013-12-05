@@ -1,5 +1,5 @@
 // TODO: Simple map editor
-
+// http://www.lgdb.org/sites/default/files/node_images/1402/3056.jpg - M.A.X. image
 
 /**
  * 0. Grid layer - selected cell, tooltips, info boxes etc.
