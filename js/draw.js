@@ -13,23 +13,58 @@
     var GameDraw = function(){
         var _that = this;
         var stage;
+
+
+
+        // Drawing settings
+        var settings = {
+            container: 'container'  // Container ID
+            ,   width:      1200        // Container width
+            ,   height:     600         // Container height
+            ,   cellWidth:  20          // One cell width
+            ,   cellHeight: 20          // One cell height
+            ,   cellStroke: '#aaa'
+            ,   imagesPath: 'images/'   // Path to images folder
+            ,   showCoors : {
+                    x1: 10,
+                    y1: 0,
+                    x2: 40,
+                    y2: 30
+            }
+        }
+
+        // Game layer by order from top to bottom
         var layers = {
-            earth_Layer: ''
+                grid_Layer:         ''
+            ,   sky_Layer:          ''
+            ,   connectors_Layer:   ''
+            ,   main_Layer:        ''
+            ,   roads_Layer:        ''
+            ,   ground_Layer:       ''
+            ,   water_Layer:        ''
+            ,   under_Layer:        ''
         };
 
-        var settings = {
-            container: 'container',   // Container ID
-            width:      1200,           // Container width
-            height:     600,            // Container height
-            cellWidth:  20,
-            cellHeight: 20
-        }
-
+        // Images
         var images = {
-            grassSrc: 'images/grass.jpg',
-            waterSrc: 'images/water.jpg'
+            grassSrc:   settings.imagesPath + 'grass.jpg',
+            waterSrc:   settings.imagesPath + 'water.jpg',
+            testGif:    settings.imagesPath + 'gif.gif'
         }
 
+        this.init = function(){
+            _that.initStage();
+            _that.initLayers();
+            _that.initImages();
+            _that.buildGrid();
+            _that.initMessages();
+            window.onload = function(){
+                _that.stage.add(layers.main_Layer);
+                _that.stage.add(layers.grid_Layer);
+            }
+        }
+
+        // Init Stage of all layers
         this.initStage = function(){
             _that.stage = new Kinetic.Stage({
                 container:  settings.container,
@@ -38,119 +73,65 @@
             });
         }
 
+        // Init layers
         this.initLayers = function(){
-            layers.earth_Layer = new Kinetic.Layer();
+            layers.main_Layer = new Kinetic.Layer();
+            layers.grid_Layer = new Kinetic.Layer();
         }
 
+        // Init images
         this.initImages = function(){
             images.grass = new Image();
             images.water = new Image();
+            images.testgif = new Image();
             images.grass.src = images.grassSrc;
             images.water.src = images.waterSrc;
+            images.testgif.src = images.testGif;
         }
 
+        // Building
         this.buildGrid = function(){
-            var grass = new Array();
-            for(var col=0; col < GameData.layers.grassWater[0].length; col++){
-                grass[col] = new Array();
-                for(var row=0; row < GameData.layers.grassWater.length; row++){
-                    grass[col][row] = new Kinetic.Image({
-                        x: col * settings.cellWidth,
-                        y: row * settings.cellHeight,
-                        image : (GameData.layers.grassWater[row][col] == 1) ? images.grass : images.water,
-                        width: 20,
-                        height:20,
-                        stroke: '#aaa'
+            var grassWaterLayer = GameData.getLayer('grassWater');
+            for(var col=settings.showCoors.x1; col < Math.min(grassWaterLayer[0].length, settings.showCoors.x2); col++){
+                for(var row=settings.showCoors.y1; row < Math.min(grassWaterLayer.length, settings.showCoors.y2); row++){
+                    var grass = new Kinetic.Image({
+                        x:      col * settings.cellWidth,
+                        y:      row * settings.cellHeight,
+                        image : (grassWaterLayer[row][col] == 1) ? images.grass : images.water,
+                        width:  settings.cellWidth,
+                        height: settings.cellHeight,
+                        stroke: settings.cellStroke
                     });
-                    layers.earth_Layer.add(grass[col][row]);
+                    layers.main_Layer.add(grass);
                 }
             }
         }
 
-        this.init = function(){
-            _that.initStage();
-            _that.initLayers();
-            _that.initImages();
-            console.log(_that);
-            window.onload = function(){
-                _that.buildGrid();
-                _that.stage.add(layers.earth_Layer);
-            }
+
+
+        this.message = function(text, x, y, fontSize, fontFamily, fill){
+            var text = new Kinetic.Text({
+                x: x,
+                y: y,
+                text: text,
+                fontSize: fontSize,
+                fontFamily: fontFamily,
+                fill: fill
+            });
+
+            layers.main_Layer.add(text);
         }
+
+        this.initMessages = function(){
+            _that.message('Test text', 100, 20);
+        }
+
+        this.showText = function(){
+
+        }
+
+
     } // var GameDraw
 
     window.GameDraw = new GameDraw();
 })();
-
-//
-//(function(){
-//    var GameDraw = {};
-//
-//    GameDraw.settings = {
-//        container: 'container',   // Container ID
-//        width:      1200,           // Container width
-//        height:     600,            // Container height
-//        cellWidth:  20,
-//        cellHeight: 20
-//    }
-//
-//    GameDraw.layers = {
-////        earth_Layer: ''
-//    }
-//
-//    GameDraw.images = {
-//        grassSrc: 'images/grass.jpg',
-//        waterSrc: 'images/water.jpg'
-//    }
-//
-//    GameDraw.initStage = function(){
-//        GameDraw.stage = new Kinetic.Stage({
-//            container:  GameDraw.settings.container,
-//            width:      GameDraw.settings.width,
-//            height:     GameDraw.settings.height
-//        });
-//    }
-//
-//    GameDraw.initLayers = function(){
-//        GameDraw.layers.earth_Layer = new Kinetic.Layer();
-//    }
-//
-//    GameDraw.initImages = function(){
-//        GameDraw.images.grass = new Image();
-//        GameDraw.images.grass.src = GameDraw.images.grassSrc;
-//        GameDraw.images.water = new Image();
-//        GameDraw.images.water.src = GameDraw.images.waterSrc;
-//    }
-//
-//    GameDraw.buildGrid = function(){
-//        var grass = new Array();
-//
-//        for(var col=0; col < GameData.layers.grassWater[0].length; col++){
-//            grass[col] = new Array();
-//            for(var row=0; row < GameData.layers.grassWater.length; row++){
-//                grass[col][row] = new Kinetic.Image({
-//                    x: col * GameDraw.settings.cellWidth,
-//                    y: row * GameDraw.settings.cellHeight,
-//                    image : (GameData.layers.grassWater[row][col] == 1) ? GameDraw.images.grass : GameDraw.images.water,
-//                    width: 20,
-//                    height:20,
-//                    stroke: '#aaa'
-//                });
-//                GameDraw.layers.earth_Layer.add(grass[col][row]);
-//            }
-//        }
-//    }
-//
-//    GameDraw.init = function(){
-//        GameDraw.initStage();
-//        GameDraw.initLayers();
-//        GameDraw.initImages();
-//        GameDraw.buildGrid();
-//
-//        GameDraw.stage.add(GameDraw.layers.earth_Layer);
-//
-//
-//    }
-//
-//    window.GameDraw = GameDraw;
-//})();
