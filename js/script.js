@@ -14,6 +14,10 @@
 
 GameDraw.init();
 
+
+
+
+
 //GameDraw.initImages();
 //GameDraw.images.grass.onload = function(){
 
