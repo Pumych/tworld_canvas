@@ -1,118 +1,19 @@
 // TODO: Simple map editor
 // http://www.lgdb.org/sites/default/files/node_images/1402/3056.jpg - M.A.X. image
 
-/**
- * 0. Grid layer - selected cell, tooltips, info boxes etc.
- * 1. Sky layer - airplanes
- * 2. Connectors layer - buildings (top), connectors
- * 3  Main layer - buildings (bottom), vehicles, boats (only if no Road and Ground layers exists)
- * 4. Roads layer - roads
- * 5. Ground layer - earth
- * 6. Water layer - water
- * 7. Underwater layer - submarines
- */
+var debug = true;
+
+function log(msg){
+    if(debug) console.log(msg);
+}
 
 GameDraw.init();
 
 
 
 
-
-//GameDraw.initImages();
-//GameDraw.images.grass.onload = function(){
-
-
-//}
-//
-//var map = {
-//    cellWidth: 20,
-//    cellHeight: 20,
-//    maxCols: 50,
-//    maxRows: 50,
-//    currSelected: {
-//        xCoor: 0,
-//        yCoor: 0
-//    }
-//}
-//
-//var stage = new Kinetic.Stage({
-//    container: 'container',
-//    width: 1200,
-//    height:600
-//});
-//
-//var earth_Layer = new Kinetic.Layer();
-//var ground_Layer = new Kinetic.Layer();
-//var sky_Layer = new Kinetic.Layer();
-//var grid_Layer = new Kinetic.Layer();
-//
-//var imageObj = new Image();
-//imageObj.src = 'images/grass.jpg';
-//
-//
-//var cells = new Array();
-//var grass = new Array();
-//for(var col=0; col < map.maxCols; col++){
-//    cells[col] = new Array();
-//    grass[col] = new Array();
-//    for(var row=0; row < map.maxRows; row++){
-//        cells[col][row] = new Kinetic.Rect({
-//            x: col * map.cellWidth,
-//            y: row * map.cellHeight,
-//            width: map.cellWidth,
-//            height: map.cellHeight,
-//            stroke: '#aaa',
-//            strokeWidth: 0.1,
-//            xCoor: col,
-//            yCoor: row
-//        });
-//
-//        grass[col][row] = new Kinetic.Image({
-//            x: col * map.cellWidth,
-//            y: row * map.cellHeight,
-//            image : imageObj,
-//            width: 20,
-//            height:20
-//        });
-//
-//        grid_Layer.add(cells[col][row]);
-//        earth_Layer.add(grass[col][row]);
-//        cells[col][row].on('click', cellSelect);
-//    }
-//}
-//
-//
-//
-//
-//
-//var circle_blue = new Kinetic.Circle({
-//    radius: 5,
-//    fill: 'blue',
-//    stroke: 'black',
-//    strokeWidth: 1,
-//    x: getX(1),
-//    y: getY(1)
-//});
-//
-//var circle_red = new Kinetic.Circle({
-//    radius: 5,
-//    fill: 'red',
-//    stroke: 'black',
-//    strokeWidth: 1,
-//    x: getX(3),
-//    y: getY(1)
-//});
-
-
-//imageObj.onload = function(){
-//
-//    earth_Layer.add(circle_blue);
-//    earth_Layer.add(circle_red);
-//
-//
-//    stage.add(earth_Layer);
-//    stage.add(grid_Layer);
-//}
+//c1.insertUnit('main', u1);
+//console.log(c1.getUnit());
 
 /**********************************************************************
  * Functions

@@ -61,6 +61,12 @@
             tankSrc:    settings.imagesPath + 'tank.ico'
         }
 
+        var cells = Array();
+
+        this.getCells = function(){
+            return cells;
+        }
+
         this.init = function(){
             _that.initStage();
             _that.initLayers();
@@ -109,7 +115,10 @@
             var grassWaterLayer = GameData.getLayer('grassWater');
             var mainLayer = GameData.getLayer('mainID');
             for(var col=settings.showCoors.x1; col < Math.min(grassWaterLayer[0].length, settings.showCoors.x2); col++){
+                cells[col] = Array();
                 for(var row=settings.showCoors.y1; row < Math.min(grassWaterLayer.length, settings.showCoors.y2); row++){
+
+                    cells[col][row] = new Cell({x:col, y:row});
 
                     // Grass/water
                     var grass = new Kinetic.Image({
@@ -123,7 +132,7 @@
 
                     // If not '000' - if not empty, so draw the unit
                     if(mainLayer[row][col] != '000'){
-                        var mainUnit = new Kinetic.Image({
+                        var imageUnit = new Kinetic.Image({
                             y:      col * settings.cellWidth,
                             x:      row * settings.cellHeight,
                             image : images.tank,
@@ -131,7 +140,11 @@
                             height: settings.cellHeight,
                             stroke: settings.cellStroke
                         });
-                        layers.main_Layer.add(mainUnit);
+
+                        var unit = new Unit({ID: mainLayer[row][col], type: 'tank'});
+                        unit.setKineticjs(imageUnit);
+                        cells[col][row].insertUnit(unit, 'main');
+                        layers.main_Layer.add(cells[col][row].getUnit('main').getKineticjs());
                     }
 
                     // Grid for click events on grid layer
@@ -145,11 +158,18 @@
                         stroke: settings.gridStroke
                     });
 
+
+
                     layers.ground_Layer.add(grass);
                     layers.grid_Layer.add(grid);
                     grid.on('click', _that.cellSelect);
                 }
             }
+        }
+
+        this.moveMainLayerUnit = function(from, to){
+            cells[to.x][to.y].insertUnit(cells[from.x][from.y].getUnit('main'), 'main');
+            layers.main_Layer.draw();
         }
 
 
@@ -161,6 +181,7 @@
             console.log(_xCoor+':'+_yCoor);
             console.log(GameData.getCellData({x:_xCoor, y:_yCoor }));
             _that.createCellTooltip(_xCoor, _yCoor);
+
         }
 
         this.initCellTooltip = function(){
@@ -168,18 +189,15 @@
         }
 
         this.createCellTooltip = function(x, y){
-
-//            layers.msg_Layer.remove(tooltips.cell);
-
+            layers.msg_Layer.removeChildren();
             tooltips.cell = new Kinetic.Text({
-                x: x,
-                y: y,
+                x: x * settings.cellWidth,
+                y: y * settings.cellHeight,
                 text: 'Cell Tooltip',
                 fontSize: 20,
                 fontFamily: 'Tahoma',
                 fill: 'blue'
             });
-
 
             layers.msg_Layer.add(tooltips.cell);
             layers.msg_Layer.draw();
@@ -204,8 +222,98 @@
             _that.message('Test text', 900, 20, 20, 'Tahoma', 'black');
         }
 
+        this.longClickMenu = function(){
+            $("a").mouseup(function(){
+                clearTimeout(pressTimer)
+                // Clear timeout
+                return false;
+            }).mousedown(function(){
+                    // Set timeout
+                    pressTimer = window.setTimeout(function() { /*... your code ...*/},1000)
+                    return false;
+                });
+        }
 
     } // var GameDraw
 
     window.GameDraw = new GameDraw();
 })();
+
+
+var Unit = function(settings){
+    var errCounter = 0;
+    if(typeof settings === 'undefined'){ log('>> Unit() - must have one argument.\n>> Unit() - INTERRUPT'); return; }
+    if(typeof settings.ID === 'undefined'){ log('>> Unit::ID - not defined.'); errCounter++; }
+    if(typeof settings.type === 'undefined'){ log('>> Unit::type - not defined.'); errCounter++; }
+    if(errCounter) { log('>> Unit() - INTERRUPT'); return; }
+
+    var that = this;
+
+    var _settings = $.extend({
+        ID: -1,
+        type: -1,
+        attack: -1,
+        shoots: -1,
+        range: -1,
+        ammo: -1,
+        armor: -1,
+        hits: -1,
+        scan: -1,
+        speed: -1,
+        kineticjs: -1
+    }, settings);
+
+    this.getSettings = function(){ return _settings; }
+    this.toString = function(){ console.log('>> Unit:: ID:'+_settings.ID+' type:'+_settings.type+' attack:'+_settings.attack); }
+    this.setKineticjs = function(obj){ _settings.kineticjs = obj; }
+    this.getKineticjs = function(){ return _settings.kineticjs; }
+//    this.updateKineticXY = function(coors){
+//        _settings.kinetcjs.x = 300;
+//        _settings.kinetcjs.y = 300;
+//    }
+}
+
+
+var Cell = function(coors){
+    var errCounter = 0;
+    if(typeof coors === 'undefined'){ log('>> Cell() - must have \'coors\' argument.\n>> Cell() - INTERRUPT'); return; }
+    if(typeof coors.x === 'undefined'){ log('>> Cell::x - not defined.'); errCounter++; }
+    if(typeof coors.y === 'undefined'){ log('>> Cell::y - not defined.'); errCounter++; }
+    if(errCounter) { log('>> Cell() - INTERRUPT'); return; }
+
+    var that = this;
+
+    var _coors = {
+        x:coors.x,
+        y:coors.y
+    }
+
+    var _units = {
+        sky: -1,
+        connectors: -1,
+        main:-1,
+        roads:-1,
+        ground:-1,
+        water:-1,
+        under:-1
+    }
+
+    this.getCoors = function(){
+        return _coors;
+    }
+
+    this.insertUnit = function(unit, layer){
+//        unit.updateKineticXY({x:300, y:300});
+        _units[layer] = unit;
+    }
+
+    this.removeUnit = function(layer){
+        _units[layer] = -1;
+    }
+
+    this.getUnit = function(layer){
+        var unit = _units[layer];
+        that.removeUnit(layer);
+        return unit;
+    }
+}
