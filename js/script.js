@@ -9,34 +9,45 @@ function log(msg){
 
 //GameDraw.init();
 
-var grassImg = new Image();
-grassImg.src = 'images/grass.jpg';
-
-var stage  = new Kinetic.Stage({
-    container:  'container',
-    width:      500,
-    height:     500
-});
-
-var main_Layer = new Kinetic.Layer();
-
-var imageUnit = new Kinetic.Image({
-    y:      10,
-    x:      10,
-    image : grassImg,
-    width:  30,
-    height: 30
-});
-
-main_Layer.add(imageUnit);
-
-window.onload = function(){
-    stage.add(main_Layer);
 
 
-    imageUnit.x = 110;
-    main_Layer.draw();
-}
+
+
+
+
+
+
+
+
+//
+//var grassImg = new Image();
+//grassImg.src = 'images/grass.jpg';
+//
+//var stage  = new Kinetic.Stage({
+//    container:  'container',
+//    width:      500,
+//    height:     500
+//});
+//
+//var main_Layer = new Kinetic.Layer();
+//
+//var imageUnit = new Kinetic.Image({
+//    y:      10,
+//    x:      10,
+//    image : grassImg,
+//    width:  30,
+//    height: 30
+//});
+//
+//main_Layer.add(imageUnit);
+//
+//window.onload = function(){
+//    stage.add(main_Layer);
+//
+//
+//    imageUnit.x = 110;
+//    main_Layer.draw();
+//}
 
 // Animal on the bitch: http://www.html5canvastutorials.com/labs/html5-canvas-animals-on-the-beach-game-with-kineticjs/
 

@@ -167,7 +167,7 @@
             }
         }
 
-        this.moveMainLayerUnit = function(from, to){
+        this.moveUnit = function(from, to, layer){
             cells[to.x][to.y].insertUnit(cells[from.x][from.y].getUnit('main'), 'main');
             layers.main_Layer.draw();
         }
