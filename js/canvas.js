@@ -11,18 +11,33 @@ Debugger.log = function(message){
 
 
 var canvasID = 1;
-var wrapper = document.getElementById("wrapper");
+var wrapper = document.getElementById("viewport");
 
-for(var col=0; col < 30; col++){
-    for(var row=0; row < 300; row++){
-        var canvas = document.createElement('canvas');
-        canvas.setAttribute('id', 'canvas_' + canvasID);
-        canvas.setAttribute('style', 'z-index:' + canvasID);
-        wrapper.appendChild(canvas);
+var grassImage = new Image();
+grassImage.src = 'images/grass.jpg';
 
-        canvasID++;
+
+
+grassImage.onload = function(){
+    var canvasArr = new Array();
+    for(var col=0; col < 30; col++){
+        canvasArr[col] = new Array();
+        for(var row=0; row < 10; row++){
+            var canvas = document.createElement('canvas');
+            canvas.setAttribute('id', 'canvas_' + canvasID);
+            canvas.setAttribute('style', 'z-index:' + canvasID);
+            wrapper.appendChild(canvas);
+
+            canvasArr[col][row] = canvas.getContext("2d");
+            canvasArr[col][row].drawImage(grassImage, col*10, row*10, 10, 10);
+            canvasID++;
+        }
     }
+
+    canvasArr[5][5].clearRect(0,0,900, 600);
 }
+
+
 
 
 

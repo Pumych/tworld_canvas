@@ -3,7 +3,7 @@
     text-align: center;
 }
 
-#wrapper{
+#viewport{
     position: relative;
     margin:0 auto;
     border:1px solid #aaa;
@@ -11,7 +11,7 @@
     height: 600px;
 
 }
-#wrapper canvas{
+#viewport canvas{
     position: absolute;
     width: 900px;
     height: 600px;
